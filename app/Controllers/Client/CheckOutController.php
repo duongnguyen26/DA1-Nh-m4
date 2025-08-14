@@ -3,8 +3,9 @@ class CheckOutController
 {
     public function index()
     {      
-        if(!isset($_SESSION['user'])){
-            return header("location: index.php?act=Login");
+        if (!isset($_SESSION['user'])) {
+            header("location: index.php?act=Login");
+            exit;
         }
 
         $user = $_SESSION['user'];
@@ -16,51 +17,74 @@ class CheckOutController
     }
 
     public function checkOut()
-{
-    $user = [
-        'id' => $_POST['id'],
-        'fullname' => $_POST['fullname'],
-        'phone' => $_POST['phone'],
-        'email' => $_POST['email'],
-        'address' => $_POST['address'],
-        'role' => $_SESSION['user']['role'],
-        'status' => $_SESSION['user']['status'],
-    ];
-    $sumPrice = (new CartController)->sumPrice();
-    $order = [
-        'user_id' => $_POST['id'],
-        'status' => 'pending',
-        'payment_method' => $_POST['payment_method'],
-        'total_price' => $sumPrice,
-    ];
+    {
+        $sessionUser = $_SESSION['user'] ?? [];
 
-    // Cập nhật thông tin người dùng
-    (new Account)->update($user['id'], $user);
-
-    // Tạo đơn hàng
-    $orderId = (new Order)->create($order);
-
-    // Xử lý chi tiết đơn hàng
-    $carts = $_SESSION['cart'];
-    foreach ($carts as $id => $cart) {
-        $orderDetailData = [
-            'order_id' => $orderId,
-            'product_id' => $id,
-            'product_name' => $cart['name'],
-            'price' => $cart['price'],
-            'quantity' => $cart['quantity'],
+        // Lấy dữ liệu từ POST, nếu không có thì lấy từ session
+        $user = [
+            'id'       => $_POST['id']       ?? ($sessionUser['id']       ?? ''),
+            'fullname' => $_POST['fullname'] ?? ($sessionUser['fullname'] ?? ''),
+            'phone'    => $_POST['phone']    ?? ($sessionUser['phone']    ?? ''),
+            'email'    => $_POST['email']    ?? ($sessionUser['email']    ?? ''),
+            'address'  => $_POST['address']  ?? ($sessionUser['address']  ?? ''),
+            'role'     => $sessionUser['role']   ?? '',
+            'status'   => $sessionUser['status'] ?? '',
         ];
-        (new Order)->createOrderDetail($orderDetailData);
+
+        // Kiểm tra thông tin bắt buộc
+        if (
+            empty($user['id']) || 
+            empty($user['fullname']) || 
+            empty($user['phone']) || 
+            empty($user['email']) || 
+            empty($user['address'])
+        ) {
+            $_SESSION['message'] = "Vui lòng nhập đầy đủ thông tin trước khi đặt hàng.";
+            header("Location: index.php?act=checkOut");
+            exit;
+        }
+
+        $sumPrice = (new CartController)->sumPrice();
+        $order = [
+            'user_id'        => $user['id'],
+            'status'         => 'pending',
+            'payment_method' => $_POST['payment_method'] ?? '',
+            'total_price'    => $sumPrice,
+        ];
+
+        if (empty($order['payment_method'])) {
+            $_SESSION['message'] = "Vui lòng chọn phương thức thanh toán.";
+            header("Location: index.php?act=checkOut");
+            exit;
+        }
+
+        // Cập nhật thông tin người dùng
+        (new Account)->update($user['id'], $user);
+
+        // Tạo đơn hàng
+        $orderId = (new Order)->create($order);
+
+        // Xử lý chi tiết đơn hàng
+        $carts = $_SESSION['cart'] ?? [];
+        foreach ($carts as $id => $cart) {
+            $orderDetailData = [
+                'order_id'     => $orderId,
+                'product_id'   => $id,
+                'product_name' => $cart['name'] ?? '',
+                'price'        => $cart['price'] ?? 0,
+                'quantity'     => $cart['quantity'] ?? 1,
+            ];
+            (new Order)->createOrderDetail($orderDetailData);
+        }
+
+        $this->clearCart();
+        $_SESSION['message'] = "Đặt hàng thành công!";
+        header("location: index.php?act=");
+        exit;
     }
-    
-    $this->clearCart();
-    $_SESSION['message'] = "alert('Đặt hàng thành công!');";
-    header("location: index.php?act=");
-}
 
-public function clearCart(){
-    unset($_SESSION['cart']);
-    unset($_SESSION['totalQuantity']);
-}
-
+    public function clearCart()
+    {
+        unset($_SESSION['cart'], $_SESSION['totalQuantity']);
+    }
 }

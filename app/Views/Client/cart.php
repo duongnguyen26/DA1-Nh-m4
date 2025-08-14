@@ -3,7 +3,7 @@
 <div class="container">
     <div class="product-list">
         <h2>Sản phẩm trong giỏ hàng</h2>
-        <form action="index.php?act=UpdateCart" method="post">
+        <form action="index.php?act=Cart" method="post">
             <?php foreach($carts as $key => $cart) : ?>
             <div class="product">
                 <input type="hidden" name="" id="">

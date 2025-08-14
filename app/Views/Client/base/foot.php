@@ -38,8 +38,8 @@
     <div class="footer-conect-link">
         <H4>KẾT NỐI</H4>
         <div class="social-link">
-            <a href="https://www.facebook.com/profile.php?id=100054413443726"><img class="social-facebook" src="Assets/images/social-facebook.png" alt="fanpage"></a>
-            <a href="#"><img class="socical-instagram" src="Assets/images/socical-instagram.png" alt=""></a>
+            <a href="https://www.facebook.com/nguyen.duong.708422"><img class="social-facebook" src="Assets/images/social-facebook.png" alt="fanpage"></a>
+            <a href="https://www.instagram.com/dik261025/"><img class="socical-instagram" src="Assets/images/socical-instagram.png" alt=""></a>
             <a href="https://www.youtube.com/c/TrựcTiếpGameVN"><img class="social-youtube" src="Assets/images/social-youtube.png" alt=""></a>
         </div>
         <h4>PHƯƠNG THỨC THANH TOÁN</h4>
@@ -48,7 +48,7 @@
         </div>
     </div>
 </footer>
-<div class="copyright">© 2024 by Kiều Văn Đạt. Tất cả các quyền được bảo lưu.</div>
+<div class="copyright">© 2024 by Nguyễn Đức Dương. Tất cả các quyền được bảo lưu.</div>
 </div>
 </body>
 <script src="Assets/Js/main.js"></script>

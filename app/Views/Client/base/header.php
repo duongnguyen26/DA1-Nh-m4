@@ -29,7 +29,8 @@
             </div>
             <div class="user-cart">
             <div class="cart-container"> 
-                <a href="<?php if(isset($_SESSION['cart']) && isset($_SESSION['user'])):?>index.php?act=Cart<?php endif; ?>"> <img class="cart" src="Assets/images/cart-logo.png" alt="Giỏ hàng"> <div class="badge"><?= $_SESSION['totalQuantity'] ?? "0" ?></div> </a> </div>
+              
+                <a href="<?php if(isset($_SESSION['index.php?act=Cart']) && isset($_SESSION['user'])):?>index.php?act=Cart<?php endif; ?>"> <img class="index.php?act=Cart" src="Assets/images/cart-logo.png" alt="Giỏ hàng"> <div class="badge"><?= $_SESSION['totalQuantity'] ?? "0" ?></div> </a> </div>
                 <?php if(empty($_SESSION['user'])) : ?> <img class="user" src="Assets/images/user.png" alt=""><?php endif; ?>
                 <?php if(isset($_SESSION['user'])) : ?> <a href="index.php?act=Information"><img class="user-1" src="Assets/images/user.png" alt=""></a><?php endif; ?>
             </div>
